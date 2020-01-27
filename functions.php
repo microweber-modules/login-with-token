@@ -24,3 +24,36 @@
     }
 
 });
+
+
+event_bind('mw.user.before_login', function ($params = false) {
+
+    if (isset($params['secret_key']) and $params['secret_key']) {
+
+        $secret_key = $params['secret_key'];
+        $get_temp_token = db_get('users_temp_login_tokens', 'single=1&token=' . $secret_key);
+        if ($get_temp_token && $get_temp_token['user_id']) {
+
+            $temp_token_created_at = new Carbon($get_temp_token['created_at']);
+
+            if (Carbon::now()->diffInMinutes($temp_token_created_at) >= 30) {
+                db_delete('users_temp_login_tokens', $get_temp_token['id']);
+                return array('error' => 'User token expired.');
+            }
+
+            $update_temp = array();
+            $update_temp['id'] = $get_temp_token['id'];
+            $update_temp['login_ip'] = user_ip();
+            $update_temp['login_at'] = date('Y-m-d H:i:s');
+            $save_update_temp = db_save('users_temp_login_tokens', $update_temp);
+
+            if ($save_update_temp) {
+                mw()->user_manager->make_logged($get_temp_token['user_id']);
+                return array('success' => true, 'redirect'=>'asasd');
+            }
+
+        }
+    }
+
+    return false;
+});
