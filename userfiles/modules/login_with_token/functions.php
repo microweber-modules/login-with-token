@@ -1,8 +1,8 @@
 <?php
-\Artisan::command('microweber:change-admin-password {newPassword}', function($newPassword) {
+\Artisan::command('microweber:change-admin-details {--username=username} {--newPassword=newPassword} {--newEmail=newEmail}', function($username, $newPassword, $newEmail) {
 
     // Find first admin
-    $firstAdmin = get_users('is_admin=1&single=1&is_active=1');
+    $firstAdmin = get_users('is_admin=1&single=1&is_active=1&username=' . $username);
     if (!$firstAdmin) {
         return false;
     }
@@ -10,15 +10,15 @@
     // Save user
     $updateUser = array();
     $updateUser['id'] = $firstAdmin['id'];
-    $updateUser['password'] = $newPassword;
+    $updateUser['password'] = Hash::make($newPassword);
+    $updateUser['email'] = $newEmail;
 
     $save = db_save('users', $updateUser);
     if ($save) {
-        echo $newPassword;
+        echo 'Done!';
     }
 
 });
-
 \Artisan::command('microweber:generate-admin-login-token', function() {
 
     // Generate token
