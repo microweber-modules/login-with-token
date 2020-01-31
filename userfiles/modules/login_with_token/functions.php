@@ -1,4 +1,21 @@
 <?php
+
+\Artisan::command('microweber:server-clear-cache', function (){
+    clearcache();
+});
+
+\Artisan::command('microweber:server-set-config {--key=key} {--value=value}', function ($key, $value) {
+
+    $allowed_configs = array('microweber');
+
+    Config::set('microweber.'.$key, $value);
+
+    Config::save($allowed_configs);
+    Cache::flush();
+
+});
+
+
 \Artisan::command('microweber:change-admin-details {--username=username} {--newPassword=newPassword} {--newEmail=newEmail}', function($username, $newPassword, $newEmail) {
 
     // Find first admin
