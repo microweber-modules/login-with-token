@@ -85,7 +85,7 @@ event_bind('mw.user.before_login', function ($params = false) {
 
             if ($save_update_temp) {
                 mw()->user_manager->make_logged($get_temp_token['user_id']);
-                return array('success' => true, 'redirect'=>admin_url());
+                return array('success' => true, 'http_redirect'=>admin_url());
             }
 
         }
