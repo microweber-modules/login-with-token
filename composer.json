@@ -1,8 +1,8 @@
 {
-  "name": "microweber-modules/login_with_token",
+  "name": "microweber-modules/login-with-token",
   "description": "Login with token",
   "license": "MIT",
-  "homepage": "https://microweber.org/modules/microweber-modules/login_with_token",
+  "homepage": "https://microweber.org/modules/microweber-modules/login-with-token",
   "authors": [
     {
       "name": "Microweber",
@@ -13,5 +13,5 @@
     "login-with-token-terminal"
   ],
   "type": "microweber-module",
-  "target-dir": "login_with_token"
+  "target-dir": "login-with-token"
 }
