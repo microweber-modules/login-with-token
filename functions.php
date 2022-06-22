@@ -4,13 +4,10 @@
     clearcache();
 });
 
-\Artisan::command('microweber:server-set-config {--key=key} {--value=value}', function ($key, $value) {
-
-    $allowed_configs = array('microweber');
-
-    Config::set('microweber.'.$key, $value);
-
-    Config::save($allowed_configs);
+\Artisan::command('microweber:server-set-config {--config=config} {--key=key} {--value=value}', function ($config, $key, $value) {
+    
+    Config::set($config.'.'.$key, $value);
+    Config::save(array($config));
     Cache::flush();
 
 });
