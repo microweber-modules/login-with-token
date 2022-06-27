@@ -54,7 +54,7 @@
     // Save temp token
     $save = db_save('users_temp_login_tokens', $saveToken);
     if ($save) {
-        return $generateToken;
+        echo $generateToken;
     }
 
 });
