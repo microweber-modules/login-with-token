@@ -37,8 +37,10 @@
 \Artisan::command('microweber:generate-admin-login-token-url', function() {
    
     $token = ___generateAdminLoginToken();
-    
-    return site_url(). '/api/user_login?secret_key=' . $token;
+    if ($token) {
+        return site_url(). '/api/user_login?secret_key=' . $token;
+    }
+    return '';
 });
 
 \Artisan::command('microweber:generate-admin-login-token', function() {
@@ -48,7 +50,8 @@
 });
 
 function ___generateAdminLoginToken() {
-if ( app()->runningInConsole() ){
+    
+    if ( app()->runningInConsole() ){
          // Generate token
         $generateToken = str_random(123);
 
@@ -67,9 +70,11 @@ if ( app()->runningInConsole() ){
         // Save temp token
         $save = db_save('users_temp_login_tokens', $saveToken);
         if ($save) {
-            echo $generateToken;
+            return $generateToken;
         }
     }
+    
+    return false;
 }
 
 
