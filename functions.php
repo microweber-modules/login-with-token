@@ -1,19 +1,19 @@
 <?php
 
-\Artisan::command('microweber:server-clear-cache', function (){
+\Artisan::command('microweber:server-clear-cache', function () {
     clearcache();
 });
 
 \Artisan::command('microweber:server-set-config {--config=config} {--key=key} {--value=value}', function ($config, $key, $value) {
-    
-    Config::set($config.'.'.$key, $value);
+
+    Config::set($config . '.' . $key, $value);
     Config::save(array($config));
     Cache::flush();
 
 });
 
 
-\Artisan::command('microweber:change-admin-details {--username=username} {--new_password=new_password} {--new_email=new_email}', function($username, $new_password, $new_email) {
+\Artisan::command('microweber:change-admin-details {--username=username} {--new_password=new_password} {--new_email=new_email}', function ($username, $new_password, $new_email) {
 
     // Find first admin
     $firstAdmin = get_users('is_admin=1&single=1&is_active=1&username=' . $username);
@@ -34,25 +34,26 @@
 
 });
 
-\Artisan::command('microweber:generate-admin-login-token-url', function() {
-   
+\Artisan::command('microweber:generate-admin-login-token-url', function () {
+
     $token = ___generateAdminLoginToken();
     if ($token) {
-        return site_url(). '/api/user_login?secret_key=' . $token;
+        echo config('app.url') . 'api/user_login?secret_key=' . $token;
     }
     return '';
 });
 
-\Artisan::command('microweber:generate-admin-login-token', function() {
+\Artisan::command('microweber:generate-admin-login-token', function () {
 
     return ___generateAdminLoginToken();
-   
+
 });
 
-function ___generateAdminLoginToken() {
-    
-    if ( app()->runningInConsole() ){
-         // Generate token
+function ___generateAdminLoginToken()
+{
+    if (app()->runningInConsole()) {
+
+        // Generate token
         $generateToken = str_random(123);
 
         // Find first admin
@@ -73,10 +74,9 @@ function ___generateAdminLoginToken() {
             return $generateToken;
         }
     }
-    
+
     return false;
 }
-
 
 event_bind('mw.user.before_login', function ($params = false) {
 
@@ -101,7 +101,7 @@ event_bind('mw.user.before_login', function ($params = false) {
 
             if ($save_update_temp) {
                 mw()->user_manager->make_logged($get_temp_token['user_id']);
-                return array('success' => true, 'http_redirect'=>admin_url());
+                return array('success' => true, 'http_redirect' => admin_url());
             }
 
         }
