@@ -34,49 +34,30 @@
 
 });
 
-\Artisan::command('microweber:generate-admin-login-token-url', function () {
-
-    $token = ___generateAdminLoginToken();
-    if ($token) {
-        echo config('app.url') . 'api/user_login?secret_key=' . $token;
-    }
-    return '';
-});
-
 \Artisan::command('microweber:generate-admin-login-token', function () {
 
-    return ___generateAdminLoginToken();
+    // Generate token
+    $generateToken = str_random(123);
 
-});
-
-function ___generateAdminLoginToken()
-{
-    if (app()->runningInConsole()) {
-
-        // Generate token
-        $generateToken = str_random(123);
-
-        // Find first admin
-        $firstAdmin = get_users('is_admin=1&single=1&is_active=1');
-        if (!$firstAdmin) {
-            return false;
-        }
-
-        $saveToken = array();
-        $saveToken['token'] = $generateToken;
-        $saveToken['user_id'] = $firstAdmin['id'];
-        $saveToken['created_at'] = date('Y-m-d H:i:s');
-        $saveToken['server_ip'] = user_ip();
-
-        // Save temp token
-        $save = db_save('users_temp_login_tokens', $saveToken);
-        if ($save) {
-            return $generateToken;
-        }
+    // Find first admin
+    $firstAdmin = get_users('is_admin=1&single=1&is_active=1');
+    if (!$firstAdmin) {
+        return false;
     }
 
-    return false;
-}
+    $saveToken = array();
+    $saveToken['token'] = $generateToken;
+    $saveToken['user_id'] = $firstAdmin['id'];
+    $saveToken['created_at'] = date('Y-m-d H:i:s');
+    $saveToken['server_ip'] = user_ip();
+
+    // Save temp token
+    $save = db_save('users_temp_login_tokens', $saveToken);
+    if ($save) {
+        return $generateToken;
+    }
+    
+});
 
 event_bind('mw.user.before_login', function ($params = false) {
 
