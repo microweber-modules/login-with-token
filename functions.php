@@ -56,7 +56,7 @@
     if ($save) {
         return $generateToken;
     }
-    
+
 });
 
 event_bind('mw.user.before_login', function ($params = false) {
