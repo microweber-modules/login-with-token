@@ -1,16 +1,14 @@
 <?php
 
-
 Route::name('api.')
     ->prefix('api')
-    ->middleware(['api','admin'])
+    ->middleware(['api'])
     ->namespace('\MicroweberPackages\Modules\LoginWithToken\Http\Controllers\Api')
     ->group(function () {
 
         Route::get('login_with_secret_key', function () {
 
             $secretKey = request()->get('key');
-
             if ($secretKey) {
 
                 $get_temp_token = db_get('users_temp_login_tokens', 'single=1&token=' . $secretKey);
